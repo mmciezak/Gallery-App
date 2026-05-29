@@ -1,0 +1,46 @@
+extends layout
+
+block content
+  h1= title
+
+  if success
+    div(class='alert alert-success') #{success}
+
+  if errors.length
+    div(class='alert alert-danger')
+      ul(class='mb-0')
+        each error in errors
+          li= error.msg
+
+  form(method='POST', action='/users/user_add')
+    div(class='mb-3')
+      label(for='first_name', class='form-label') First name
+      input(
+        type='text',
+        id='first_name',
+        name='first_name',
+        class='form-control',
+        value=user.first_name || ''
+      )
+
+    div(class='mb-3')
+      label(for='last_name', class='form-label') Last name
+      input(
+        type='text',
+        id='last_name',
+        name='last_name',
+        class='form-control',
+        value=user.last_name || ''
+      )
+
+    div(class='mb-3')
+      label(for='username', class='form-label') Username
+      input(
+        type='text',
+        id='username',
+        name='username',
+        class='form-control',
+        value=user.username || ''
+      )
+
+    button(type='submit', class='btn btn-primary') Add user

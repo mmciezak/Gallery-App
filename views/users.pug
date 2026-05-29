@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    h1= title
+
+    each user in users
+        div
+        h3= user.first_name + ' ' + user.last_name
+        p username: #{user.username}
+        //p joined: #{user.createdAt.toLocaleDateString('pl-PL')}
