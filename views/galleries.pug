@@ -6,4 +6,16 @@ block content
       title= title
     body
       h1 Galleries
-      p Galleries
+      a(href='/galleries/gallery_add', class='btn btn-primary mb-3') + Add a new gallery
+
+      each gallery in galleries
+        div(class='card mb-3')
+          div(class='card-body')
+            h5(class='card-title')= gallery.name
+            p(class='card-text')= gallery.description
+            p(class='text-muted')
+              small Owner:
+                if gallery.owner
+                  |  #{gallery.owner.first_name} #{gallery.owner.last_name}
+                else
+                  |  No owner

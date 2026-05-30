@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1= title
+
+  if errors.length
+    div(class='alert alert-danger')
+      ul(class='mb-0')
+        each error in errors
+          li= error.msg
+
+  form(method='POST', action='/users/login')
+    div(class='mb-3')
+      label(for='username', class='form-label') Username
+      input(type='text', id='username', name='username', class='form-control')
+
+    div(class='mb-3')
+      label(for='password', class='form-label') Password
+      input(type='password', id='password', name='password', class='form-control')
+
+    button(type='submit', class='btn btn-primary') Log in

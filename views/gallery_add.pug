@@ -1,0 +1,43 @@
+extends layout
+
+block content
+  h1= title
+
+  if success
+    div(class='alert alert-success') #{success}
+
+  if errors.length
+    div(class='alert alert-danger')
+      ul(class='mb-0')
+        each error in errors
+          li= error.msg
+
+  form(method='POST', action='/galleries/gallery_add')
+    div(class='mb-3')
+      label(for='name', class='form-label') Gallery Name
+      input(type='text', id='name', name='name', class='form-control', value=gallery.name || '')
+
+    div(class='mb-3')
+      label(for='description', class='form-label') Description
+      textarea(id='description', name='description', class='form-control', rows='3')= gallery.description || ''
+
+    div(class='mb-3')
+      label(for='owner', class='form-label') Owner
+      if isAdmin
+        select(id='owner', name='owner', class='form-select')
+          option(value='') -- Select user --
+          each user in users
+            option(value=user._id, selected=gallery.owner == user._id.toString())
+              | #{user.first_name} #{user.last_name} (#{user.username})
+      else
+        input(
+          type='text',
+          class='form-control',
+          value=currentUser.first_name + ' ' + currentUser.last_name + ' (' + currentUser.username + ')',
+          disabled
+        )
+
+    button(type='submit', class='btn btn-primary') Add Gallery
+
+  hr
+  a(href='/galleries') ← Back to galleries

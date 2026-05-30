@@ -1,5 +1,5 @@
 //mongo db
-
+var { JWT_SECRET } = require('./config');
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -14,6 +14,8 @@ var imagesRouter = require('./routes/images');
 var statsRouter = require('./routes/stats');
 
 var app = express();
+
+var jwt = require('jsonwebtoken');
 
 // Połączenie z MongoDB
 mongoose.connect('mongodb://localhost:27017/GalleryDB')
@@ -33,6 +35,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// token
+
+app.use(function(req, res, next) {
+  var token = req.cookies.token;
+  if (token) {
+    try {
+      var decoded = jwt.verify(token, JWT_SECRET);
+      res.locals.loggedUser = decoded; // dostępne we wszystkich widokach
+    } catch (err) {
+      res.locals.loggedUser = null;
+    }
+  } else {
+    res.locals.loggedUser = null;
+  }
+  next();
+});
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -55,6 +75,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 
 //
