@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  h1= title
+
+  if success
+    div(class='alert alert-success') #{success}
+
+  if errors.length
+    div(class='alert alert-danger')
+      ul(class='mb-0')
+        each error in errors
+          li= error.msg
+
+  div(class='mb-3 text-center')
+    img(src='/images/' + image.path, class='img-fluid rounded', alt=image.name, style='max-height:300px')
+
+  form(method='POST', action='/images/image_update?id=' + image._id)
+    input(type='hidden', name='galleryId', value=galleryId)
+
+    div(class='mb-3')
+      label(for='name', class='form-label') Image Name
+      input(type='text', id='name', name='name', class='form-control', value=image.name)
+
+    div(class='mb-3')
+      label(for='description', class='form-label') Description
+      textarea(id='description', name='description', class='form-control', rows='3')= image.description
+
+    div(class='d-flex gap-2')
+      button(type='submit', class='btn btn-warning') Update
+      a(href='/galleries/gallery_browse', class='btn btn-secondary') Cancel

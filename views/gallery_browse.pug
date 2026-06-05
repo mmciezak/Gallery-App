@@ -1,0 +1,47 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method='POST', action='/galleries/gallery_browse')
+    div(class='mb-3 d-flex gap-2')
+      select(id='gallery', name='gallery', class='form-select')
+        option(value='') -- Select gallery --
+        each gallery in galleries
+          option(
+            value=gallery._id,
+            selected=selectedGallery && selectedGallery._id.toString() === gallery._id.toString()
+          ) #{gallery.name} (#{gallery.owner ? gallery.owner.username : 'no owner'})
+      button(type='submit', class='btn btn-primary') Browse
+
+  if selectedGallery
+    h2= selectedGallery.name
+
+    if images.length === 0
+      p No images in this gallery yet.
+    else
+      div(class='row')
+        each image in images
+          div(class='col-sm-4 mb-3')
+            div(class='card')
+              img(src='/images/' + image.path, class='card-img-top', alt=image.name)
+              div(class='card-body')
+                h5(class='card-title')= image.name
+                p(class='card-text')= image.description
+                div(class='d-flex gap-2 mt-2')
+                    a(
+                      href='/images/image_show?id=' + image._id + '&gallery=' + selectedGallery._id,
+                      class='btn btn-sm btn-outline-primary'
+                    ) Show
+                    if loggedUser && (loggedUser.username === 'admin' || (selectedGallery.owner && selectedGallery.owner.username === loggedUser.username))
+                      a(
+                        href='/images/image_update?id=' + image._id + '&gallery=' + selectedGallery._id,
+                        class='btn btn-sm btn-outline-warning'
+                      ) Update
+                      a(
+                        href='/images/image_delete?id=' + image._id + '&gallery=' + selectedGallery._id,
+                        class='btn btn-sm btn-outline-danger'
+                        onclick='return confirm("Are you sure you want to delete this image?")'
+                      ) Delete
+  hr
+  a(href='/galleries') ← Back to galleries

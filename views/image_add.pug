@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  h1= title
+
+  if success
+    div(class='alert alert-success') #{success}
+
+  if errors.length
+    div(class='alert alert-danger')
+      ul(class='mb-0')
+        each error in errors
+          li= error.msg
+
+  form(method='POST', action='/images/image_add', enctype='multipart/form-data')
+    div(class='mb-3')
+      label(for='image', class='form-label') Select image file
+      input(type='file', id='image', name='image', class='form-control', accept='image/*')
+
+    div(class='mb-3')
+      label(for='name', class='form-label') Image Name
+      input(type='text', id='name', name='name', class='form-control')
+
+    div(class='mb-3')
+      label(for='description', class='form-label') Description
+      textarea(id='description', name='description', class='form-control', rows='2')
+
+    div(class='mb-3')
+      label(for='gallery', class='form-label') Add to Gallery
+      select(id='gallery', name='gallery', class='form-select')
+        option(value='') -- Select gallery --
+        each gallery in galleries
+          option(value=gallery._id)
+            | #{gallery.name} (#{gallery.owner ? gallery.owner.username : 'no owner'})
+
+    button(type='submit', class='btn btn-primary') Upload & Add to Gallery
+
+  hr
+  a(href='/images') ← Back to images

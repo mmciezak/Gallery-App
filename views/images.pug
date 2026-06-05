@@ -1,10 +1,28 @@
 extends layout 
 
 block content
+    h1 Images
 
-    html 
-        head
-            title= Images
-        body
-            h1 Images
-            p Images
+    if images.length === 0
+        p No images found.
+    else
+        table(class='table table-striped')
+            thead
+                tr
+                    th Name
+                    th Description
+                    th Gallery
+                    th Preview
+            tbody
+                each image in images
+                    tr
+                        td= image.name
+                        td= image.description || '-'
+                        td
+                            if image.gallery
+                                = image.gallery.name
+                            else
+                                = 'Unknown'
+                        td
+                            if image.path
+                                img(src=image.path, alt=image.name, class='img-thumbnail', style='max-width: 50px; height: auto;')

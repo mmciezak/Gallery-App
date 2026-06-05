@@ -57,6 +57,10 @@ app.use(function(req, res, next) {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/galleries', galleriesRouter);
+app.use('/galleries', function(req, res, next) {
+  res.locals.imagesPath = '/images/';
+  next();
+});
 app.use('/images', imagesRouter);
 app.use('/stats', statsRouter);
 

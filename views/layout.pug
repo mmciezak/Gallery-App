@@ -30,6 +30,12 @@ html(lang='en')
                 a(href='/users/user_add') Add user
               li
                 a(href='/galleries/gallery_add') Add gallery
+              li
+                a(href='/images/image_add') Upload image
+              //- li
+              //-   a(href='/images/image_to_gallery') Add image to gallery
+              li
+                a(href='/galleries/gallery_browse') Browse galleries
               hr
               if loggedUser
                 li(class='sidebar-user') Hello, #{loggedUser.username}!

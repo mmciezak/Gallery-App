@@ -2,6 +2,7 @@ var asyncHandler = require('express-async-handler');
 var { body, validationResult } = require('express-validator');
 var Gallery = require('../models/Gallery');
 var User = require('../models/User');
+var Image = require('../models/Image');
 
 exports.galleryList = asyncHandler(async function(req, res, next) {
   var galleries = await Gallery.find().populate('owner');
@@ -81,3 +82,33 @@ exports.galleryAddPost = [
     });
   })
 ];
+
+// przegladanie galerii
+exports.galleryBrowseGet = asyncHandler(async function(req, res, next) {
+  var galleries = await Gallery.find().populate('owner');
+
+  res.render('gallery_browse', {
+    title: 'Browse Gallery',
+    galleries: galleries,
+    images: [],
+    selectedGallery: null,
+    errors: [],
+  });
+});
+
+exports.galleryBrowsePost = asyncHandler(async function(req, res, next) {
+  var galleries = await Gallery.find().populate('owner');
+  //var selectedGallery = await Gallery.findById(req.body.gallery);
+  var selectedGallery = await Gallery.findById(req.body.gallery).populate('owner');
+  var images = await Image.find({ gallery: req.body.gallery });
+  console.log('owner:', selectedGallery.owner)
+  console.log('loggedUser:', res.locals.loggedUser)
+
+  res.render('gallery_browse', {
+    title: 'Browse Gallery',
+    galleries: galleries,
+    images: images,
+    selectedGallery: selectedGallery,
+    errors: [],
+  });
+});
