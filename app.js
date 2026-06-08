@@ -5,7 +5,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var mongoose = require('mongoose');  // ← DODAJ
+var mongoose = require('mongoose');
+
+var swaggerJsdoc = require('swagger-jsdoc');
+var swaggerUi = require('swagger-ui-express');
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -64,6 +68,32 @@ app.use('/galleries', function(req, res, next) {
 app.use('/images', imagesRouter);
 app.use('/stats', statsRouter);
 
+
+
+
+// konfiguracja swagger
+var swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Gallery API',
+      version: '1.0.0',
+      description: 'Dokumentacja API',
+    },
+    servers: [
+      { url: 'http://localhost:3000' }
+    ],
+  },
+  apis: ['./routes/*.js'],
+};
+
+var swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -79,8 +109,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-
 
 
 //
